@@ -2,7 +2,8 @@
   "values": {
     "verneuil:quartz": {
       "gem_variants": [
-        "verneuil:quartz/amethyst","verneuil:quartz/red_striped_jasper"
+        "verneuil:quartz/amethyst",
+        "verneuil:quartz/red_striped_jasper"
       ]
     }
   }

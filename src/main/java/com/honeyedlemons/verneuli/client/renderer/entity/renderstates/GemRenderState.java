@@ -5,6 +5,6 @@ import com.honeyedlemons.verneuli.data.dataTypes.GemVariant;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
 public class GemRenderState extends HumanoidRenderState {
-    public GemAppearanceData gemAppearanceData;
-    public GemVariant gemVariant;
+	public GemAppearanceData gemAppearanceData;
+	public GemVariant gemVariant;
 }

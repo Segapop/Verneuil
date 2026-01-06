@@ -20,55 +20,46 @@ import java.util.UUID;
 
 public class GemSavedData extends SavedData {
 
-    public HashMap<UUID,CompoundTag> gemData;
+	public HashMap<UUID, CompoundTag> gemData;
 
 
-    public static final Codec<GemSavedData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC,CompoundTag.CODEC).fieldOf("gem_data").forGetter(data -> data.gemData)
-    ).apply(instance, GemSavedData::new));
+	public static final Codec<GemSavedData> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.unboundedMap(UUIDUtil.STRING_CODEC, CompoundTag.CODEC).fieldOf("gem_data").forGetter(data -> data.gemData)).apply(instance, GemSavedData::new));
 
-    public static final SavedDataType<GemSavedData> ID = new SavedDataType<>(
-            "gem_data",
-            GemSavedData::new,
-            CODEC
-    );
-    private GemSavedData() {
-        this(new HashMap<>());
-    }
+	public static final SavedDataType<GemSavedData> ID = new SavedDataType<>("gem_data", GemSavedData::new, CODEC);
 
-    private GemSavedData(Map<UUID, CompoundTag> gemData) {
-        this.gemData = new HashMap<>(gemData);
-    }
+	private GemSavedData() {
+		this(new HashMap<>());
+	}
 
-    public Map<UUID,CompoundTag> getGemData()
-    {
-        return gemData;
-    }
+	private GemSavedData(Map<UUID, CompoundTag> gemData) {
+		this.gemData = new HashMap<>(gemData);
+	}
 
-    public ValueInput getGem(UUID uuid, RegistryAccess access)
-    {
-        try (ProblemReporter.ScopedCollector problemreporter$scopedcollector = new ProblemReporter.ScopedCollector(() -> "gemSavedData", Verneuil.LOGGER)) {
-            var tag = this.gemData.get(uuid);
-            if (tag == null)
-                return null;
-            return TagValueInput.create(problemreporter$scopedcollector, access, tag);
-        }
-    }
+	public Map<UUID, CompoundTag> getGemData() {
+		return gemData;
+	}
 
-    public void addGem(UUID uuid, TagValueOutput output)
-    {
-        CompoundTag tag = output.buildResult();
-        this.gemData.put(uuid, tag);
-        this.setDirty();
-    }
+	public ValueInput getGem(UUID uuid, RegistryAccess access) {
+		try (ProblemReporter.ScopedCollector problemreporter$scopedcollector = new ProblemReporter.ScopedCollector(() -> "gemSavedData", Verneuil.LOGGER)) {
+			var tag = this.gemData.get(uuid);
+			if (tag == null)
+				return null;
+			return TagValueInput.create(problemreporter$scopedcollector, access, tag);
+		}
+	}
 
-    public void removeGem(UUID uuid)
-    {
-        this.gemData.remove(uuid);
-        this.setDirty();
-    }
-    public void removeGem(AbstractGem gem)
-    {
-        removeGem(gem.getUUID());
-    }
+	public void addGem(UUID uuid, TagValueOutput output) {
+		CompoundTag tag = output.buildResult();
+		this.gemData.put(uuid, tag);
+		this.setDirty();
+	}
+
+	public void removeGem(UUID uuid) {
+		this.gemData.remove(uuid);
+		this.setDirty();
+	}
+
+	public void removeGem(AbstractGem gem) {
+		removeGem(gem.getUUID());
+	}
 }

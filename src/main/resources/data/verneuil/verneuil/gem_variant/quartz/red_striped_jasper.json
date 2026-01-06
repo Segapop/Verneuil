@@ -1,8 +1,8 @@
 {
-  "parent" : "verneuil:quartz",
+  "parent": "verneuil:quartz",
   "gem_item": {
-    "id" : "verneuil:red_striped_jasper_gem",
-    "count" : 1
+    "id": "verneuil:red_striped_jasper_gem",
+    "count": 1
   },
   "type": "red_striped_jasper",
   "translation": "verneuil.gemvariant.red_striped_jasper",
@@ -59,7 +59,8 @@
       "shoulder_right"
     ],
     "markings": [
-      "tiger","stripe"
+      "tiger",
+      "stripe"
     ],
     "uniform": [
       "default"
@@ -68,40 +69,44 @@
       "default"
     ]
   },
-  "layers": [{
+  "layers": [
+    {
       "name": "eyes",
-      "palette" : "gem",
+      "palette": "gem",
       "is_variant": false
-    }, {
+    },
+    {
       "name": "skin",
-      "palette" : "skin",
+      "palette": "skin",
       "is_variant": false
-    }, {
+    },
+    {
       "name": "markings",
-      "palette" : "markings",
+      "palette": "markings",
       "is_variant": true
     },
     {
       "name": "uniform",
-      "palette" : "uniform",
+      "palette": "uniform",
       "is_variant": true,
       "layers_to_prefix": [
-        "belly","back"
+        "belly",
+        "back"
       ]
     },
     {
       "name": "insignia",
-      "palette" : "insignia",
+      "palette": "insignia",
       "is_variant": true
     },
     {
       "name": "hair",
-      "palette" : "hair",
+      "palette": "hair",
       "is_variant": true
     },
     {
       "name": "gem",
-      "palette" : "gem",
+      "palette": "gem",
       "is_variant": true
     }
   ],

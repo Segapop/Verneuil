@@ -16,17 +16,17 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
 @EventBusSubscriber(modid = Verneuil.MODID, value = Dist.CLIENT)
 public class VerneuilClient {
-    public VerneuilClient(ModContainer container) {
-        // Allows NeoForge to create a config screen for this mod's configs.
-        // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
-        // Do not forget to add translations for your config options to the en_us.json file.
-        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-    }
+	public VerneuilClient(ModContainer container) {
+		// Allows NeoForge to create a config screen for this mod's configs.
+		// The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
+		// Do not forget to add translations for your config options to the en_us.json file.
+		container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+	}
 
-    @SubscribeEvent
-    static void onClientSetup(FMLClientSetupEvent event) {
-        // Some client setup code
-        Verneuil.LOGGER.info("HELLO FROM CLIENT SETUP");
-        Verneuil.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-    }
+	@SubscribeEvent
+	static void onClientSetup(FMLClientSetupEvent event) {
+		// Some client setup code
+		Verneuil.LOGGER.info("HELLO FROM CLIENT SETUP");
+		Verneuil.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+	}
 }

@@ -16,44 +16,40 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.CrossbowItem;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRenderState> extends HumanoidMobRenderer<AbstractGem, GemRenderState, AbstractGemModel> {
-    public AbstractGemRenderer(EntityRendererProvider.Context context, AbstractGemModel model, float shadowRadius) {
-        super(context, model, shadowRadius);
+	public AbstractGemRenderer(EntityRendererProvider.Context context, AbstractGemModel model, float shadowRadius) {
+		super(context, model, shadowRadius);
 
-    }
+	}
 
-    @Override
-    public @NotNull GemRenderState createRenderState() {
-        return new GemRenderState();
-    }
+	@Override
+	public GemRenderState createRenderState() {
+		return new GemRenderState();
+	}
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull GemRenderState renderState) {
-        var type = renderState.entityType.toShortString();
-        return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "/textures/entity/gems/" + type + "/" + type + ".png");
-    }
+	@Override
+	public ResourceLocation getTextureLocation(GemRenderState renderState) {
+		var type = renderState.entityType.toShortString();
+		return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "/textures/entity/gems/" + type + "/" + type + ".png");
+	}
 
-    @Override
-    public void extractRenderState(@NotNull AbstractGem type, @NotNull GemRenderState renderState, float partialTick) {
-        super.extractRenderState(type, renderState, partialTick);
-        renderState.gemAppearanceData = type.getGemAppearanceData();
-        renderState.gemVariant = type.getGemVariant();
+	@Override
+	public void extractRenderState(AbstractGem type, GemRenderState renderState, float partialTick) {
+		super.extractRenderState(type, renderState, partialTick);
+		renderState.gemAppearanceData = type.getGemAppearanceData();
+		renderState.gemVariant = type.getGemVariant();
 		if (renderState.deathTime > 0)
-		{
 			renderState.isInvisible = true;
-		}
-    }
+	}
 
-    @Override
-    public void submit(GemRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        if (renderState.gemVariant.variants().isEmpty())
-            return;
+	@Override
+	public void submit(GemRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+		if (renderState.gemVariant.variants().isEmpty())
+			return;
 
 		for (Map.Entry<String, List<String>> entry : renderState.gemVariant.variants().get().entrySet()) {
 			String string = entry.getKey();
@@ -61,12 +57,13 @@ public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRe
 				return;
 		}
 
-		super.submit(renderState,poseStack,nodeCollector,cameraRenderState);
-    }
+		super.submit(renderState, poseStack, nodeCollector, cameraRenderState);
+	}
+
 	@Override
-	protected void setupRotations(@NotNull GemRenderState renderState, @NotNull PoseStack poseStack, float bodyRot, float scale) {
+	protected void setupRotations(GemRenderState renderState, PoseStack poseStack, float bodyRot, float scale) {
 		if (this.isShaking(renderState)) {
-			bodyRot += (float)(Math.cos((float)Mth.floor(renderState.ageInTicks) * 3.25F) * Math.PI * (double)0.4F);
+			bodyRot += (float) (Math.cos((float) Mth.floor(renderState.ageInTicks) * 3.25F) * Math.PI * (double) 0.4F);
 		}
 
 		if (!renderState.hasPose(Pose.SLEEPING)) {
@@ -74,21 +71,24 @@ public abstract class AbstractGemRenderer<T extends AbstractGem, S extends GemRe
 		}
 
 		if (renderState.deathTime > 0.0F) {
-			poseStack.scale(0,0,0);
-		} else if (renderState.isAutoSpinAttack) {
+			poseStack.scale(0, 0, 0);
+		}
+		else if (renderState.isAutoSpinAttack) {
 			poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F - renderState.xRot));
 			poseStack.mulPose(Axis.YP.rotationDegrees(renderState.ageInTicks * -75.0F));
-		} else if (renderState.isUpsideDown) {
+		}
+		else if (renderState.isUpsideDown) {
 			poseStack.translate(0.0F, (renderState.boundingBoxHeight + 0.1F) / scale, 0.0F);
 			poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 		}
 	}
+
 	@Override
-	protected HumanoidModel.@NotNull ArmPose getArmPose(AbstractGem gem, @NotNull HumanoidArm arm) {
+	protected HumanoidModel.ArmPose getArmPose(AbstractGem gem, HumanoidArm arm) {
 		if (gem.getMainArm() == arm && gem.isAggressive() && gem.getMainHandItem().is(item -> item.value() instanceof BowItem))
 			return HumanoidModel.ArmPose.BOW_AND_ARROW;
-		if (gem.getMainArm() == arm && gem.isAggressive() && gem.getMainHandItem().is(item -> item.value() instanceof CrossbowItem))
-			return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
+		if (gem.isBlocking())
+			return HumanoidModel.ArmPose.BLOCK;
 		return HumanoidModel.ArmPose.EMPTY;
 	}
 }

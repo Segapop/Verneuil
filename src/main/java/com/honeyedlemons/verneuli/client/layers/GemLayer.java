@@ -11,70 +11,54 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Map;
 
-public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel>{
+public class GemLayer extends RenderLayer<GemRenderState, AbstractGemModel> {
 
-    public GemLayer(RenderLayerParent<GemRenderState, AbstractGemModel> renderer) {
-        super(renderer);
-    }
+	public GemLayer(RenderLayerParent<GemRenderState, AbstractGemModel> renderer) {
+		super(renderer);
+	}
 
-    @Override
-    public void submit(@NotNull PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, @NotNull GemRenderState renderState, float yRot, float xRot) {
-        if (renderState.gemVariant.layers().isEmpty())
-            return;
+	@Override
+	public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, GemRenderState renderState, float yRot, float xRot) {
+		if (renderState.gemVariant.layers().isEmpty())
+			return;
 
-        if (renderState.gemAppearanceData == null)
-            return;
+		if (renderState.gemAppearanceData == null)
+			return;
 
-        var layers = renderState.gemVariant.layers().get();
+		var layers = renderState.gemVariant.layers().get();
 
-        layers.forEach((layerData)->
-        {
-            String name = layerData.layerName();
-            String palette = layerData.paletteName().isPresent() ? layerData.paletteName().get() : null;
-            Boolean isVariant = layerData.isVariant();
-            String variantName = isVariant ? renderState.gemAppearanceData.getLayerData().get(name) : null;
+		layers.forEach((layerData) -> {
+			String name = layerData.layerName();
+			String palette = layerData.paletteName().isPresent() ? layerData.paletteName().get() : null;
+			Boolean isVariant = layerData.isVariant();
+			String variantName = isVariant ? renderState.gemAppearanceData.getLayerData().get(name) : null;
 
-            ResourceLocation resourceLocation = variantName != null
-                    ? getVariantLocation(renderState,layerData,variantName) : getResourceLocation(renderState,name);
-            RenderType rendertype = RenderType.entityTranslucent(resourceLocation);
-            int index = layers.indexOf(layerData);
-            nodeCollector.order(index).submitModel(
-                    this.getParentModel(),
-                    renderState,
-                    poseStack,
-                    rendertype,
-                    packedLight,
-                    LivingEntityRenderer.getOverlayCoords(renderState, 0.0F),
-                    renderState.gemAppearanceData.getColorData().getOrDefault(palette, Color.WHITE.getRGB()),
-                    null,
-                    renderState.outlineColor,
-                    null);
-        });
-    }
+			ResourceLocation resourceLocation = variantName != null ? getVariantLocation(renderState, layerData, variantName) : getResourceLocation(renderState, name);
+			RenderType rendertype = RenderType.entityTranslucent(resourceLocation);
+			int index = layers.indexOf(layerData);
+			nodeCollector.order(index).submitModel(this.getParentModel(), renderState, poseStack, rendertype, packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0.0F), renderState.gemAppearanceData.getColorData().getOrDefault(palette, Color.WHITE.getRGB()), null, renderState.outlineColor, null);
+		});
+	}
 
-    public ResourceLocation getResourceLocation(GemRenderState renderState, String name) {
-        return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID,
-                "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + name + ".png");
-    }
+	public ResourceLocation getResourceLocation(GemRenderState renderState, String name) {
+		return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + name + ".png");
+	}
 
-    public ResourceLocation getVariantLocation(GemRenderState renderState, LayerData layerData, String variant) {
-        var layers = renderState.gemAppearanceData.getLayerData();
-        var prefix = "";
-        if (layerData.layersToPrefix().isPresent()) {
+	public ResourceLocation getVariantLocation(GemRenderState renderState, LayerData layerData, String variant) {
+		var layers = renderState.gemAppearanceData.getLayerData();
+		var prefix = "";
+		if (layerData.layersToPrefix().isPresent()) {
 			for (Map.Entry<String, String> entry : layers.entrySet()) {
 				String layerVariant = entry.getValue();
-				if (layerData.layersToPrefix().get().contains(layerVariant))
-                {
-                    prefix = layerVariant+"_";
-                }
+				if (layerData.layersToPrefix().get().contains(layerVariant)) {
+					prefix = layerVariant + "_";
+				}
 			}
 		}
-        return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID,
-                "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + layerData.layerName() + "/" + prefix + variant + ".png");
-    }
+		return ResourceLocation.fromNamespaceAndPath(Verneuil.MODID, "textures/entity/gems/" + renderState.entityType.toShortString() + "/" + layerData.layerName() + "/" + prefix + variant + ".png");
+	}
 }

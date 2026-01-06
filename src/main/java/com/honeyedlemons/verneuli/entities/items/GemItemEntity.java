@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 public class GemItemEntity extends ItemEntity {
 	private int reformTicks;
@@ -30,25 +29,25 @@ public class GemItemEntity extends ItemEntity {
 		this.setItem(itemStack);
 		this.lifespan = itemStack.getEntityLifespan(level);
 	}
-	protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+
+	protected void addAdditionalSaveData(ValueOutput output) {
 		super.addAdditionalSaveData(output);
-		output.putInt("ReformTicks",reformTicks);
+		output.putInt("ReformTicks", reformTicks);
 	}
 
-	protected void readAdditionalSaveData(@NotNull ValueInput input) {
+	protected void readAdditionalSaveData(ValueInput input) {
 		super.readAdditionalSaveData(input);
-		this.reformTicks = input.getIntOr("ReformTicks",0);
+		this.reformTicks = input.getIntOr("ReformTicks", 0);
 	}
+
 	@Override
 	public void tick() {
 		super.tick();
 		if (this.tickCount % 20 == 0 && !this.level().isClientSide()) {
 			int reformSeconds = VerneuilConfigServer.CONFIG.reformTime.get();
-			if(reformTicks >= reformSeconds)
-			{
-				if (this.getItem().getItem() instanceof GemItem gemItem)
-				{
-					gemItem.summonGem(this.getItem(),this.level(), BlockPos.containing(this.position()),null);
+			if (reformTicks >= reformSeconds) {
+				if (this.getItem().getItem() instanceof GemItem gemItem) {
+					gemItem.summonGem(this.getItem(), this.level(), BlockPos.containing(this.position()), null);
 				}
 			}
 			else {

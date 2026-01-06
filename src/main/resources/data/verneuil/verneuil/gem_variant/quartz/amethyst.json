@@ -1,8 +1,8 @@
 {
   "parent": "verneuil:quartz",
   "gem_item": {
-    "id" : "verneuil:amethyst_gem",
-    "count" : 1
+    "id": "verneuil:amethyst_gem",
+    "count": 1
   },
   "type": "amethyst",
   "translation": "verneuil.gemvariant.amethyst",

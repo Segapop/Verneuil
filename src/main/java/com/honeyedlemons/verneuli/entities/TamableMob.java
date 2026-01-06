@@ -13,7 +13,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -29,14 +28,14 @@ public class TamableMob extends PathfinderMob implements OwnableEntity {
 	}
 
 	@Override
-	protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(TAMED, false);
 		builder.define(MOVEMENT_TYPE, (byte) 0);
 	}
 
 	@Override
-	protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+	protected void addAdditionalSaveData(ValueOutput output) {
 		super.addAdditionalSaveData(output);
 		EntityReference.store(this.owner, output, "Owner");
 		output.putBoolean("Tame", this.isTame());
@@ -44,11 +43,11 @@ public class TamableMob extends PathfinderMob implements OwnableEntity {
 	}
 
 	@Override
-	protected void readAdditionalSaveData(@NotNull ValueInput input) {
+	protected void readAdditionalSaveData(ValueInput input) {
 		super.readAdditionalSaveData(input);
 		this.owner = EntityReference.readWithOldOwnerConversion(input, "Owner", this.level());
-		this.setTame(input.getBooleanOr("Tame", false),false);
-		this.setMovementType(input.getByteOr("MovementType",(byte) 0));
+		this.setTame(input.getBooleanOr("Tame", false), false);
+		this.setMovementType(input.getByteOr("MovementType", (byte) 0));
 	}
 
 	@javax.annotation.Nullable
@@ -62,8 +61,7 @@ public class TamableMob extends PathfinderMob implements OwnableEntity {
 	}
 
 
-	public void tame(Player player, @Nullable Component message)
-	{
+	public void tame(Player player, @Nullable Component message) {
 		this.setTame(true, true);
 		this.setOwner(player);
 
@@ -90,45 +88,37 @@ public class TamableMob extends PathfinderMob implements OwnableEntity {
 		return entity == this.getOwner();
 	}
 
-	public boolean doesShareOwner(LivingEntity entity)
-	{
-		if (entity instanceof OwnableEntity ownable)
-		{
+	public boolean doesShareOwner(LivingEntity entity) {
+		if (entity instanceof OwnableEntity ownable) {
 			return ownable.getOwner() == this.getOwner();
 		}
 		return false;
 	}
 
 	@Override
-	public void die(@NotNull DamageSource cause) {
+	public void die(DamageSource cause) {
 		Component deathMessage = this.getCombatTracker().getDeathMessage();
 		super.die(cause);
 
 		if (this.dead)
-			if (this.level() instanceof ServerLevel serverlevel
-					&& serverlevel.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES)
-					&& this.getOwner() instanceof ServerPlayer serverplayer) {
+			if (this.level() instanceof ServerLevel serverlevel && serverlevel.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer serverplayer && cause.getDirectEntity() != serverplayer) {
 				serverplayer.sendSystemMessage(deathMessage);
 			}
 	}
 
-	public boolean isMovementType(int state)
-	{
+	public boolean isMovementType(int state) {
 		return this.entityData.get(MOVEMENT_TYPE).equals((byte) state);
 	}
 
-	public byte getMovementType()
-	{
+	public byte getMovementType() {
 		return this.entityData.get(MOVEMENT_TYPE);
 	}
 
-	public void setMovementType(int state)
-	{
+	public void setMovementType(int state) {
 		this.entityData.set(MOVEMENT_TYPE, (byte) state);
 	}
 
-	public void cycleMovementType()
-	{
+	public void cycleMovementType() {
 		var movementType = this.getMovementType();
 
 		if (movementType + 1 >= 3)
@@ -138,10 +128,10 @@ public class TamableMob extends PathfinderMob implements OwnableEntity {
 
 		this.setMovementType(movementType);
 	}
+
 	@Override
-	public boolean canHaveALeashAttachedTo(@NotNull Entity entity) {
-		if (entity instanceof LivingEntity livingEntity && !this.isOwnedBy(livingEntity))
-		{
+	public boolean canHaveALeashAttachedTo(Entity entity) {
+		if (entity instanceof LivingEntity livingEntity && !this.isOwnedBy(livingEntity)) {
 			return false;
 		}
 		return super.canHaveALeashAttachedTo(entity);
